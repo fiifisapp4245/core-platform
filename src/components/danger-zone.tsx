@@ -1,5 +1,6 @@
 import { AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface DangerAction {
   label: string
@@ -10,21 +11,35 @@ interface DangerAction {
 }
 
 interface DangerZoneProps {
+  id?: string
+  description?: string
   actions: DangerAction[]
+  className?: string
 }
 
-export function DangerZone({ actions }: DangerZoneProps) {
+export function DangerZone({ id, description, actions, className }: DangerZoneProps) {
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-destructive/30 bg-destructive/5 p-5">
-      <div className="flex items-center gap-2">
-        <AlertTriangle className="size-4 text-destructive" />
-        <h3 className="text-base font-semibold text-destructive">Danger zone</h3>
-      </div>
-      <div className="flex flex-col gap-4">
+    <section
+      id={id}
+      className={cn(
+        "scroll-mt-24 overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-destructive/30",
+        className
+      )}
+    >
+      <header className="border-b border-destructive/20 bg-destructive/5 px-5 py-4">
+        <div className="flex items-center gap-2">
+          <AlertTriangle className="size-4 text-destructive" />
+          <h3 className="text-base font-semibold text-destructive">Danger zone</h3>
+        </div>
+        {description && (
+          <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>
+        )}
+      </header>
+      <div className="flex flex-col divide-y">
         {actions.map((action) => (
           <div
             key={action.label}
-            className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>
               <p className="text-sm font-medium">{action.label}</p>
@@ -38,9 +53,8 @@ export function DangerZone({ actions }: DangerZoneProps) {
               </p>
             </div>
             <Button
-              variant="outline"
-              size="sm"
-              className="shrink-0 border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              variant="destructive"
+              className="shrink-0"
               onClick={action.onClick}
             >
               {action.buttonLabel ?? action.label}

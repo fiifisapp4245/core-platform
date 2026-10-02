@@ -9,6 +9,7 @@ import { roles, allPermissions } from "@/lib/mock"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
 import { use } from "react"
 
 export default function RoleDetailPage({
@@ -170,27 +171,12 @@ function AppPermissionGroup({
               <div>
                 <p className="text-sm font-medium">{perm}</p>
               </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={values[perm] ?? false}
-                onClick={() => onToggle(perm)}
+              <Switch
+                checked={values[perm] ?? false}
+                onCheckedChange={() => onToggle(perm)}
                 disabled={readOnly}
-                className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 ${
-                  values[perm]
-                    ? "bg-primary"
-                    : "bg-input"
-                }`}
-              >
-                <span
-                  className={`inline-block size-3.5 rounded-full bg-white shadow transition-transform ${
-                    values[perm] ? "translate-x-4" : "translate-x-0.5"
-                  }`}
-                />
-                <span className="sr-only">
-                  {values[perm] ? "Enabled" : "Disabled"}
-                </span>
-              </button>
+                aria-label={perm}
+              />
             </div>
           ))}
         </div>

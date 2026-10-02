@@ -33,18 +33,14 @@ export default function InvoicesPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-1">
           {(["All", ...allStatuses] as const).map((s) => (
-            <button
+            <Button
               key={s}
-              type="button"
+              size="sm"
+              variant={statusFilter === s ? "default" : "ghost"}
               onClick={() => setStatusFilter(s)}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                statusFilter === s
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-              }`}
             >
               {s}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="relative sm:w-56">

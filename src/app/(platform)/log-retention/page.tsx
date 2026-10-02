@@ -49,7 +49,7 @@ export default function LogRetentionPage() {
       />
 
       <Card className="max-w-xl">
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>Retention period</CardTitle>
           <CardDescription>
             Currently set to {options.find((o) => o.value === current)?.label}.

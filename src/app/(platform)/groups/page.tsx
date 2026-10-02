@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { groups } from "@/lib/mock"
 import { EmptyState } from "@/components/empty-state"
 import { PageHeader } from "@/components/page-header"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -77,12 +78,9 @@ export default function GroupsPage() {
 
               <div className="flex flex-wrap gap-1.5">
                 {g.roles.map((r) => (
-                  <span
-                    key={r}
-                    className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
-                  >
+                  <Badge key={r} variant="secondary">
                     {r}
-                  </span>
+                  </Badge>
                 ))}
               </div>
 

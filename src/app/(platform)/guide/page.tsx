@@ -4,7 +4,9 @@ import { ArrowRight, BookOpen, ChevronRight, MessageCircle, Search } from "lucid
 import { guideArticles } from "@/lib/mock"
 import { PageHeader } from "@/components/page-header"
 import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const apps = ["Core Platform", "MyStoreGuard", "LoanDrift"]
 
@@ -45,21 +47,15 @@ export default function GuidePage() {
       </div>
 
       {/* App tabs (static, Core Platform active) */}
-      <div className="flex gap-2 border-b">
-        {apps.map((app, i) => (
-          <button
-            key={app}
-            type="button"
-            className={`px-3 py-2 text-sm font-medium transition-colors ${
-              i === 0
-                ? "border-b-2 border-primary text-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {app}
-          </button>
-        ))}
-      </div>
+      <Tabs defaultValue={apps[0]}>
+        <TabsList variant="line">
+          {apps.map((app) => (
+            <TabsTrigger key={app} value={app}>
+              {app}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       {/* Categories */}
       <section>
@@ -72,7 +68,7 @@ export default function GuidePage() {
             return (
               <Card
                 key={cat.name}
-                className="flex flex-col gap-2 p-4 transition-shadow hover:shadow-md cursor-pointer"
+                className="flex cursor-pointer flex-col gap-2 p-4 transition-colors hover:ring-primary/40"
               >
                 <span className="text-2xl" aria-hidden>{cat.icon}</span>
                 <div>
@@ -98,7 +94,7 @@ export default function GuidePage() {
             <Link
               key={link.label}
               href={link.href as never}
-              className="flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors hover:border-primary/40 hover:bg-accent"
+              className="flex items-center gap-2 rounded-lg bg-card px-3 py-2.5 text-sm ring-1 ring-foreground/10 transition-colors hover:bg-accent hover:ring-primary/40"
             >
               <BookOpen className="size-4 shrink-0 text-muted-foreground" />
               <span className="flex-1">{link.label}</span>
@@ -111,7 +107,7 @@ export default function GuidePage() {
       {/* Recent articles */}
       <section>
         <h2 className="mb-4 text-base font-semibold">Core Platform articles</h2>
-        <div className="flex flex-col divide-y rounded-xl border">
+        <div className="flex flex-col divide-y overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
           {coreArticles.map((article) => (
             <div key={article.id} className="flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors">
               <div className="min-w-0 flex-1">
@@ -136,12 +132,9 @@ export default function GuidePage() {
             Our support team is available Monday–Saturday, 8 am–6 pm GMT.
           </p>
         </div>
-        <a
-          href="mailto:support@trovesuite.com"
-          className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
+        <Button nativeButton={false} render={<a href="mailto:support@trovesuite.com" />}>
           Contact support
-        </a>
+        </Button>
       </Card>
     </div>
   )

@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { SelectNative } from "@/components/ui/select-native"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const appById = Object.fromEntries(apps.map((a) => [a.id, a]))
@@ -79,7 +80,7 @@ export default function UsersPage() {
       {/* Quick invite bar */}
       <form
         onSubmit={handleInvite}
-        className="flex flex-col gap-2 rounded-xl border bg-card p-4 sm:flex-row sm:items-end"
+        className="flex flex-col gap-2 rounded-xl bg-card p-4 ring-1 ring-foreground/10 sm:flex-row sm:items-end"
       >
         <div className="flex-1">
           <label className="mb-1.5 block text-sm font-medium">
@@ -95,16 +96,15 @@ export default function UsersPage() {
         </div>
         <div className="w-44">
           <label className="mb-1.5 block text-sm font-medium">Role</label>
-          <select
+          <SelectNative
             value={inviteRole}
             onChange={(e) => setInviteRole(e.target.value)}
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
             <option value="admin">Admin</option>
             <option value="store-manager">Store Manager</option>
             <option value="cashier">Cashier</option>
             <option value="loan-officer">Loan Officer</option>
-          </select>
+          </SelectNative>
         </div>
         <Button type="submit" disabled={sending || !inviteEmail}>
           {sending ? "Sending…" : "Send invite"}
@@ -263,9 +263,8 @@ export default function UsersPage() {
                             <RefreshCw data-icon="inline-start" /> Resend
                           </Button>
                           <Button
-                            variant="ghost"
+                            variant="destructive"
                             size="sm"
-                            className="text-destructive hover:text-destructive"
                             onClick={() =>
                               toast.success(`Invitation revoked`)
                             }

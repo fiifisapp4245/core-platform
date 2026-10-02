@@ -6,7 +6,7 @@ export default function PlatformLayout({ children }: LayoutProps<"/">) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="min-w-0 bg-background">
+      <SidebarInset className="min-w-0 bg-canvas">
         <SiteHeader />
         {/* pb-16 ensures consistent bottom clearance on every page */}
         <main className="mx-auto w-full min-w-0 max-w-7xl flex-1 px-4 pt-6 pb-16 md:px-8 md:pt-8">

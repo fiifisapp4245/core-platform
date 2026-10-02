@@ -65,7 +65,7 @@ export function SiteHeader() {
   const unread = notifications.filter((n) => !n.read).length
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 min-w-0 shrink-0 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur supports-backdrop-filter:bg-background/70">
+    <header className="sticky top-0 z-20 flex h-14 min-w-0 shrink-0 items-center gap-2 border-b bg-canvas/80 px-4 backdrop-blur supports-backdrop-filter:bg-canvas/70">
       <SidebarTrigger className="-ml-1" />
       <Separator
         orientation="vertical"
@@ -135,7 +135,7 @@ export function SiteHeader() {
         >
           <Bell />
           {unread > 0 && (
-            <span className="absolute top-1.5 right-1.5 flex size-2 items-center justify-center rounded-full bg-brand-mint ring-2 ring-background" />
+            <span className="absolute top-1.5 right-1.5 flex size-2 items-center justify-center rounded-full bg-brand-mint ring-2 ring-canvas" />
           )}
         </Button>
 

@@ -10,11 +10,12 @@ import { Field, FormSection } from "@/components/form-section"
 import { ConfirmDialog } from "@/components/confirm-dialog"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
+import { SelectNative } from "@/components/ui/select-native"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
 
-// ─── Section nav (visible ≥ xl) ──────────────────────────────────────────────
+// ─── Section nav (visible ≥ lg) ──────────────────────────────────────────────
 
 const sections = [
   { id: "company", label: "Company details" },
@@ -24,23 +25,50 @@ const sections = [
 ]
 
 function SectionNav() {
+  const [active, setActive] = React.useState(sections[0].id)
+
+  // Highlight the section currently in view
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        if (visible[0]) setActive(visible[0].target.id)
+      },
+      { rootMargin: "-80px 0px -60% 0px" }
+    )
+    sections.forEach((s) => {
+      const el = document.getElementById(s.id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <nav
       aria-label="Page sections"
-      className="hidden xl:flex xl:w-48 xl:shrink-0 xl:flex-col xl:gap-1"
+      className="hidden lg:sticky lg:top-20 lg:block lg:w-56 lg:shrink-0 lg:self-start"
     >
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        On this page
-      </p>
-      {sections.map((s) => (
-        <a
-          key={s.id}
-          href={`#${s.id}`}
-          className="rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        >
-          {s.label}
-        </a>
-      ))}
+      <ul className="flex flex-col gap-0.5 rounded-xl bg-card p-2 ring-1 ring-foreground/10">
+        {sections.map((s) => (
+          <li key={s.id}>
+            <a
+              href={`#${s.id}`}
+              onClick={() => setActive(s.id)}
+              aria-current={active === s.id ? "location" : undefined}
+              className={cn(
+                "relative block rounded-lg px-3 py-2 text-sm transition-colors",
+                active === s.id
+                  ? "bg-primary/10 font-medium text-primary before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              {s.label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   )
 }
@@ -160,10 +188,10 @@ export default function OrganizationPage() {
           description="Manage your organization profile, legal details and branding."
         />
 
-        <div className="flex gap-8">
+        <div className="flex items-start gap-8">
           <SectionNav />
 
-          <div className="flex min-w-0 flex-1 flex-col gap-10">
+          <div className="flex min-w-0 flex-1 flex-col gap-6">
             {/* ─── Company details ───────────────────────────────────── */}
             <FormSection
               id="company"
@@ -179,15 +207,14 @@ export default function OrganizationPage() {
                   />
                 </Field>
                 <Field label="Industry">
-                  <select
+                  <SelectNative
                     value={form.industry}
                     onChange={(e) => update("industry", e.target.value)}
-                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   >
                     {industryOptions.map((o) => (
                       <option key={o} value={o}>{o}</option>
                     ))}
-                  </select>
+                  </SelectNative>
                 </Field>
               </div>
 
@@ -195,27 +222,25 @@ export default function OrganizationPage() {
                 label="Description"
                 hint={`${form.description.length}/500 characters`}
               >
-                <textarea
+                <Textarea
                   value={form.description}
                   onChange={(e) => update("description", e.target.value)}
                   maxLength={500}
                   rows={4}
-                  className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-none"
                   placeholder="A short description of your business…"
                 />
               </Field>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field label="Number of employees">
-                  <select
+                  <SelectNative
                     value={form.employeeCount}
                     onChange={(e) => update("employeeCount", e.target.value)}
-                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   >
                     {employeeOptions.map((o) => (
                       <option key={o} value={o}>{o}</option>
                     ))}
-                  </select>
+                  </SelectNative>
                 </Field>
                 <Field label="Phone">
                   <Input
@@ -244,12 +269,11 @@ export default function OrganizationPage() {
               </div>
             </FormSection>
 
-            <Separator />
 
             {/* ─── Address & legal ───────────────────────────────────── */}
             <FormSection
               id="address"
-              title="Address &amp; legal entity"
+              title="Address & legal entity"
               description="Used on tax documents and invoices. Stored securely."
             >
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -305,7 +329,6 @@ export default function OrganizationPage() {
               </div>
             </FormSection>
 
-            <Separator />
 
             {/* ─── Branding ──────────────────────────────────────────── */}
             <FormSection
@@ -313,7 +336,7 @@ export default function OrganizationPage() {
               title="Branding"
               description="Logo shown in the platform header and on exported documents."
             >
-              <Card className="flex items-center gap-4 p-4">
+              <div className="flex items-center gap-4">
                 {/* Logo placeholder */}
                 <div className="flex size-16 items-center justify-center rounded-xl border bg-muted text-xl font-semibold text-muted-foreground">
                   {orgData.initials}
@@ -326,13 +349,14 @@ export default function OrganizationPage() {
                     PNG or SVG, max 2 MB, min 200×200 px
                   </p>
                 </div>
-              </Card>
+              </div>
             </FormSection>
 
-            <Separator />
 
             {/* ─── Danger zone ───────────────────────────────────────── */}
             <DangerZone
+              id="danger"
+              description="Irreversible actions that affect your entire organization."
               actions={[
                 {
                   label: "Delete organization",
@@ -345,20 +369,19 @@ export default function OrganizationPage() {
               ]}
             />
 
+            <p className="text-xs text-muted-foreground">
+              Last updated by {orgData.updatedBy} on{" "}
+              {new Date(orgData.updatedAt).toLocaleDateString("en-GH", {
+                dateStyle: "medium",
+              })}
+              .
+            </p>
+
             {/* Extra bottom space accounts for the save bar when dirty */}
             {dirty && <div className="h-16" />}
           </div>
         </div>
       </div>
-
-      {/* Last updated */}
-      <p className="mt-4 text-xs text-muted-foreground">
-        Last updated by {orgData.updatedBy} on{" "}
-        {new Date(orgData.updatedAt).toLocaleDateString("en-GH", {
-          dateStyle: "medium",
-        })}
-        .
-      </p>
 
       {/* Sticky save bar */}
       <SaveBar

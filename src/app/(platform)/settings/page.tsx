@@ -18,10 +18,12 @@ import { useTheme } from "next-themes"
 import { currentUser } from "@/lib/apps"
 import { PageHeader } from "@/components/page-header"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
+import { SelectNative } from "@/components/ui/select-native"
+import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // ─── Profile tab ──────────────────────────────────────────────────────────────
@@ -34,7 +36,7 @@ function ProfileTab() {
   return (
     <div className="flex flex-col gap-6 max-w-xl">
       <Card>
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>Personal information</CardTitle>
           <CardDescription>
             Your name and email used across TroveSuite.
@@ -107,7 +109,7 @@ function SecurityTab() {
     <div className="flex flex-col gap-6 max-w-xl">
       {/* Password */}
       <Card>
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>Password</CardTitle>
           <CardDescription>Change your account password.</CardDescription>
         </CardHeader>
@@ -148,7 +150,7 @@ function SecurityTab() {
 
       {/* Active sessions */}
       <Card>
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>Active sessions</CardTitle>
           <CardDescription>
             Devices currently signed in to your account.
@@ -165,9 +167,7 @@ function SecurityTab() {
                 <div className="flex items-center gap-2 font-medium">
                   {s.device}
                   {s.current && (
-                    <span className="rounded-md bg-success/10 px-1.5 py-0.5 text-[10px] font-medium text-success">
-                      This device
-                    </span>
+                    <Badge variant="secondary">This device</Badge>
                   )}
                 </div>
                 <div className="text-xs text-muted-foreground">
@@ -176,9 +176,9 @@ function SecurityTab() {
               </div>
               {!s.current && (
                 <Button
-                  variant="ghost"
+                  variant="destructive"
                   size="sm"
-                  className="text-destructive hover:text-destructive shrink-0"
+                  className="shrink-0"
                   onClick={() => revokeSession(s.id)}
                 >
                   Revoke
@@ -187,9 +187,8 @@ function SecurityTab() {
             </div>
           ))}
           <Button
-            variant="outline"
-            size="sm"
-            className="self-start border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+            variant="destructive"
+            className="self-start"
             onClick={() => {
               setSessions((ss) => ss.filter((s) => s.current))
               toast.success("All other sessions signed out")
@@ -202,19 +201,15 @@ function SecurityTab() {
 
       {/* New device alert */}
       <Card>
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>New device sign-in</CardTitle>
           <CardDescription>
             Get an email alert when a new device signs in to your account.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <div className="relative">
-              <input type="checkbox" className="sr-only peer" defaultChecked />
-              <div className="h-5 w-9 rounded-full bg-input peer-checked:bg-primary transition-colors" />
-              <div className="absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-4" />
-            </div>
+          <label className="flex cursor-pointer items-center gap-3">
+            <Switch defaultChecked />
             <span className="text-sm font-medium">Email me when a new device signs in</span>
           </label>
         </CardContent>
@@ -234,7 +229,7 @@ function PreferencesTab() {
   return (
     <div className="flex flex-col gap-6 max-w-xl">
       <Card>
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>Language &amp; region</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -242,38 +237,35 @@ function PreferencesTab() {
             <label className="text-sm font-medium flex items-center gap-1.5">
               <Globe className="size-4" /> Language
             </label>
-            <select
+            <SelectNative
               value={lang}
               onChange={(e) => setLang(e.target.value)}
-              className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               <option value="en-GH">English (Ghana)</option>
               <option value="en-US">English (United States)</option>
-            </select>
+            </SelectNative>
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">Timezone</label>
-            <select
+            <SelectNative
               value={tz}
               onChange={(e) => setTz(e.target.value)}
-              className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               <option value="Africa/Accra">Africa/Accra (GMT+0)</option>
               <option value="UTC">UTC</option>
-            </select>
+            </SelectNative>
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">Date format</label>
-            <select
+            <SelectNative
               value={dateFormat}
               onChange={(e) => setDateFormat(e.target.value)}
-              className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               <option value="d MMM yyyy">1 Oct 2026</option>
               <option value="dd/MM/yyyy">01/10/2026</option>
               <option value="MM/dd/yyyy">10/01/2026</option>
               <option value="yyyy-MM-dd">2026-10-01</option>
-            </select>
+            </SelectNative>
           </div>
           <Button onClick={() => toast.success("Preferences saved")} className="self-start">
             <Check data-icon="inline-start" /> Save preferences
@@ -283,7 +275,7 @@ function PreferencesTab() {
 
       {/* Theme */}
       <Card>
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>Appearance</CardTitle>
           <CardDescription>Choose how the platform looks to you.</CardDescription>
         </CardHeader>

@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { roles } from "@/lib/mock"
 import { EmptyState } from "@/components/empty-state"
 import { PageHeader } from "@/components/page-header"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -64,9 +65,7 @@ export default function RolesPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold">{role.name}</span>
-                    <span className="rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                      System
-                    </span>
+                    <Badge variant="outline">System</Badge>
                   </div>
                   <p className="mt-0.5 text-sm text-muted-foreground">
                     {role.description}
@@ -109,9 +108,7 @@ export default function RolesPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{role.name}</span>
-                      <span className="rounded-md bg-secondary px-1.5 py-0.5 text-xs text-secondary-foreground">
-                        Custom
-                      </span>
+                      <Badge variant="secondary">Custom</Badge>
                     </div>
                     <p className="mt-0.5 text-sm text-muted-foreground">
                       {role.description}

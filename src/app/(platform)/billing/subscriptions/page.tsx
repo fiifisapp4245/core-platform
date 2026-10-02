@@ -22,7 +22,7 @@ export default function SubscriptionsPage() {
       {/* Plan overview */}
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader>
+          <CardHeader className="border-b">
             <CardTitle>{orgData.plan}</CardTitle>
             <CardDescription>
               Billed monthly · next payment Oct 15, 2026
@@ -82,7 +82,7 @@ export default function SubscriptionsPage() {
         {/* Summary */}
         <div className="flex flex-col gap-4">
           <Card>
-            <CardHeader>
+            <CardHeader className="border-b">
               <CardTitle>Billing summary</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 text-sm">
@@ -105,7 +105,7 @@ export default function SubscriptionsPage() {
 
           {/* Available apps */}
           <Card>
-            <CardHeader>
+            <CardHeader className="border-b">
               <CardTitle>Available apps</CardTitle>
               <CardDescription>Add more modules as you grow</CardDescription>
             </CardHeader>

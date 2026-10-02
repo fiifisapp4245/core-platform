@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { SelectNative } from "@/components/ui/select-native"
 
 const allApps = [...new Set(auditLogs.map((l) => l.app))]
 const allActions = [...new Set(auditLogs.map((l) => l.action))]
@@ -56,16 +57,17 @@ export default function AuditLogsPage() {
               className="bg-card pl-8 w-56"
             />
           </div>
-          <select
+          <SelectNative
             value={appFilter}
             onChange={(e) => setAppFilter(e.target.value)}
-            className="flex h-9 rounded-md border border-input bg-card px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            className="bg-card"
+            containerClassName="w-44"
           >
             <option value="All">All apps</option>
             {allApps.map((a) => (
               <option key={a} value={a}>{a}</option>
             ))}
-          </select>
+          </SelectNative>
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <RefreshCw className="size-3.5" />

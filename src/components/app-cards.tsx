@@ -38,8 +38,8 @@ export function StatusBadge({ status }: { status: TroveApp["status"] }) {
 export function SubscribedAppCard({ id }: { id: string }) {
   const app = getApp(id)
   return (
-    <Card className="group/app relative gap-0 p-0 transition-shadow hover:shadow-md hover:ring-primary/30">
-      <div className="flex items-start gap-3 p-5 pb-4">
+    <Card className="group/app relative gap-0 p-0 transition-colors hover:ring-primary/30">
+      <div className="flex items-start gap-3 p-5">
         <AppIcon app={app} size="lg" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -63,26 +63,13 @@ export function SubscribedAppCard({ id }: { id: string }) {
         </DropdownMenu>
       </div>
 
-      {app.metrics && (
-        <div className="mx-5 grid grid-cols-2 divide-x rounded-lg border bg-muted/40">
-          {app.metrics.map((m) => (
-            <div key={m.label} className="px-3 py-2.5">
-              <div className="text-xs text-muted-foreground">{m.label}</div>
-              <div className="mt-0.5 text-sm font-semibold tabular-nums">{m.value}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-4 flex items-center gap-3 border-t px-5 py-3">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+      <div className="flex items-center gap-3 border-t px-5 py-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
             <Users className="size-3.5" />
-            {app.seats?.used}/{app.seats?.total} seats
+            {app.seats?.used} / {app.seats?.total} seats used
           </span>
-          <span>
-            {app.status === "trial" ? "Trial ends" : "Renews"} {app.renewsOn}
-          </span>
+          <span>{app.status === "trial" ? "Trial ends" : "Renews"} {app.renewsOn}</span>
         </div>
         <Button size="sm" nativeButton={false} render={<a href={app.href} target="_blank" rel="noreferrer" />}>
           Open <ArrowUpRight data-icon="inline-end" />
@@ -121,7 +108,7 @@ export function DiscoverAppCard({ id, compact = false }: { id: string; compact?:
   }
 
   return (
-    <Card className={cn("gap-3 transition-shadow hover:shadow-sm", compact ? "p-4" : "p-5")}>
+    <Card className={cn("gap-3 transition-colors hover:ring-primary/30", compact ? "p-4" : "p-5")}>
       <div className="flex items-start justify-between gap-3">
         <AppIcon app={app} />
         <StatusBadge status={app.status} />

@@ -38,11 +38,11 @@ export default function PermissionsPage() {
       <div className="flex flex-col gap-6">
         {Object.entries(allPermissions).map(([app, perms]) => (
           <section key={app}>
-            <div className="mb-3 flex items-center gap-2">
-              <Shield className="size-4 text-muted-foreground" />
-              <h2 className="text-base font-semibold">{app}</h2>
-            </div>
             <Card className="gap-0 p-0">
+              <div className="flex items-center gap-2 border-b px-4 py-3">
+                <Shield className="size-4 text-muted-foreground" />
+                <h2 className="text-base font-semibold">{app}</h2>
+              </div>
               {perms.map((perm, i) => {
                 const key = `${app}::${perm}`
                 const holdingRoles = permissionRoles[key] ?? []

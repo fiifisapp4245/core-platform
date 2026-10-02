@@ -6,6 +6,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-canvas: var(--canvas);
   --color-success: var(--success);
   --color-brand-blue: var(--brand-blue);
   --color-brand-navy: var(--brand-navy);
@@ -62,7 +63,10 @@
   --brand-mint: #0acc92;
   --brand-ink: #000626;
 
-  --background: #f7f8fa;
+  /* shadcn components assume --background is the surface colour (white).
+     The grey app backdrop lives in its own token. */
+  --background: #ffffff;
+  --canvas: #f7f8fa;
   --foreground: #0a0d14;
   --card: #ffffff;
   --card-foreground: #0a0d14;
@@ -99,6 +103,7 @@
 
 .dark {
   --background: #0a0a0a;
+  --canvas: #0a0a0a;
   --foreground: #fafafa;
   --card: #141414;
   --card-foreground: #fafafa;
@@ -137,7 +142,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-canvas text-foreground;
   }
   html {
     @apply font-sans;

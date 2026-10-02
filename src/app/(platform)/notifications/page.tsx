@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/empty-state"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 
@@ -178,8 +179,10 @@ function Preferences() {
 
       {Object.entries(byApp).map(([app, items]) => (
         <section key={app}>
-          <p className="mb-3 text-sm font-semibold">{app}</p>
           <Card className="gap-0 p-0 overflow-x-auto">
+            <div className="border-b px-4 py-3">
+              <h3 className="text-base font-semibold">{app}</h3>
+            </div>
             <table className="w-full min-w-[420px] text-sm">
               <thead className="border-b bg-muted/40 text-xs text-muted-foreground">
                 <tr>
@@ -233,24 +236,11 @@ function Toggle({
   label: string
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
+    <Switch
+      checked={checked}
+      onCheckedChange={() => onChange()}
       aria-label={label}
-      onClick={onChange}
-      className={cn(
-        "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-        checked ? "bg-primary" : "bg-input"
-      )}
-    >
-      <span
-        className={cn(
-          "inline-block size-3.5 rounded-full bg-white shadow transition-transform",
-          checked ? "translate-x-4" : "translate-x-0.5"
-        )}
-      />
-    </button>
+    />
   )
 }
 

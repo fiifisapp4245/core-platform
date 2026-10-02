@@ -14,16 +14,16 @@ import {
   Wallet,
 } from "lucide-react"
 
-import { AddAppCard, DiscoverAppCard, SubscribedAppCard } from "@/components/app-cards"
+import { AddAppCard, SubscribedAppCard } from "@/components/app-cards"
 import { AppIcon, TroveMark } from "@/components/brand"
 import {
   activity,
   apps,
   currentUser,
-  discoverApps,
   organization,
   subscribedApps,
 } from "@/lib/apps"
+import { formatCurrency } from "@/lib/format"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -53,7 +53,7 @@ const stats = [
   },
   {
     label: "Next invoice",
-    value: "GH₵ 1,450",
+    value: formatCurrency(1450),
     hint: "Due Oct 15, 2026",
     icon: Wallet,
   },
@@ -74,7 +74,6 @@ const quickActions = [
   { label: "Contact support", icon: LifeBuoy, href: "/guide" },
 ]
 
-// Setup checklist — derived from "real" data in a full implementation
 const checklist = [
   { id: "org", label: "Create organization", done: true, href: "/organization" },
   { id: "loc", label: "Add a location", done: true, href: "/locations" },
@@ -92,7 +91,8 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Welcome banner */}
+
+      {/* ── Welcome banner ───────────────────────────────────────────────── */}
       <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-navy via-[#0d3f7a] to-brand-blue p-6 text-white md:p-8">
         <div className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-brand-teal/30 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 left-1/3 size-72 rounded-full bg-brand-mint/20 blur-3xl" />
@@ -110,16 +110,11 @@ export default function HomePage() {
               <Button
                 nativeButton={false}
                 render={
-                  <a
-                    href={subscribedApps[0].href}
-                    target="_blank"
-                    rel="noreferrer"
-                  />
+                  <a href={subscribedApps[0].href} target="_blank" rel="noreferrer" />
                 }
                 className="bg-white text-brand-navy hover:bg-blue-50"
               >
-                Open {subscribedApps[0].name}{" "}
-                <ArrowUpRight data-icon="inline-end" />
+                Open {subscribedApps[0].name} <ArrowUpRight data-icon="inline-end" />
               </Button>
               <Button
                 variant="outline"
@@ -145,9 +140,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trial banner */}
+      {/* ── Trial banner ─────────────────────────────────────────────────── */}
       {trial && (
-        <div className="-mt-4 flex flex-col gap-3 rounded-xl border border-primary/20 bg-accent px-4 py-3 text-sm sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-accent px-4 py-3 text-sm sm:flex-row sm:items-center">
           <AppIcon app={trial} size="sm" />
           <p className="flex-1 text-accent-foreground">
             Your <span className="font-medium">{trial.name}</span> trial ends on{" "}
@@ -159,7 +154,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Stats */}
+      {/* ── KPI stats ────────────────────────────────────────────────────── */}
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label} size="sm" className="px-1">
@@ -178,178 +173,83 @@ export default function HomePage() {
         ))}
       </section>
 
+      {/* ── Your apps — FULL WIDTH ───────────────────────────────────────── */}
+      <section>
+        <div className="mb-4 flex items-end justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Your apps</h2>
+            <p className="text-sm text-muted-foreground">
+              Apps your organization currently subscribes to
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={<Link href="/apps" />}
+          >
+            Manage all apps <ArrowRight data-icon="inline-end" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {subscribedApps.map((app) => (
+            <SubscribedAppCard key={app.id} id={app.id} />
+          ))}
+          <AddAppCard />
+        </div>
+      </section>
+
+      {/* ── Bottom split: main content + right rail ──────────────────────── */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* Left/main column */}
+
+        {/* Left — checklist + activity */}
         <div className="flex min-w-0 flex-col gap-8 lg:col-span-2">
+
           {/* Setup checklist */}
           {checklistDone < checklistTotal && (
             <section>
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Get set up</h2>
-                <span className="text-sm text-muted-foreground">
-                  {checklistDone} / {checklistTotal} complete
-                </span>
-              </div>
-              <Card className="gap-4 p-5">
-                <Progress value={(checklistDone / checklistTotal) * 100} className="h-1.5" />
-                <div className="flex flex-col gap-2">
-                  {checklist.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={item.href as never}
-                      className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-muted/50"
-                    >
-                      <span
-                        className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 ${
-                          item.done
-                            ? "border-success bg-success text-white"
-                            : "border-muted-foreground/40"
-                        }`}
+              <Card>
+                <CardHeader className="border-b">
+                  <CardTitle>Get set up</CardTitle>
+                  <CardDescription>
+                    {checklistDone} / {checklistTotal} complete
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                  <Progress value={(checklistDone / checklistTotal) * 100} className="h-1.5" />
+                  <div className="flex flex-col gap-1">
+                    {checklist.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href as never}
+                        className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-muted/50"
                       >
-                        {item.done && <Check className="size-3" />}
-                      </span>
-                      <span
-                        className={
-                          item.done
-                            ? "text-muted-foreground line-through"
-                            : "font-medium"
-                        }
-                      >
-                        {item.label}
-                      </span>
-                      {!item.done && (
-                        <ArrowRight className="ml-auto size-4 text-muted-foreground" />
-                      )}
-                    </Link>
-                  ))}
-                </div>
+                        <span
+                          className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 ${
+                            item.done
+                              ? "border-success bg-success text-white"
+                              : "border-muted-foreground/40"
+                          }`}
+                        >
+                          {item.done && <Check className="size-3" />}
+                        </span>
+                        <span className={item.done ? "text-muted-foreground line-through" : "font-medium"}>
+                          {item.label}
+                        </span>
+                        {!item.done && (
+                          <ArrowRight className="ml-auto size-4 text-muted-foreground" />
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                </CardContent>
               </Card>
             </section>
           )}
 
-          {/* Your apps */}
-          <section>
-            <div className="mb-4 flex items-end justify-between">
-              <div>
-                <h2 className="text-lg font-semibold">Your apps</h2>
-                <p className="text-sm text-muted-foreground">
-                  Apps your organization subscribes to
-                </p>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                nativeButton={false}
-                render={<Link href="/apps" />}
-              >
-                Manage apps <ArrowRight data-icon="inline-end" />
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {subscribedApps.map((app) => (
-                <SubscribedAppCard key={app.id} id={app.id} />
-              ))}
-              <AddAppCard />
-            </div>
-          </section>
-
-          {/* Discover more */}
-          <section>
-            <div className="mb-4 flex items-end justify-between">
-              <div>
-                <h2 className="text-lg font-semibold">Discover more apps</h2>
-                <p className="text-sm text-muted-foreground">
-                  Add modules as you grow. They share the same customers, products
-                  and people.
-                </p>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                nativeButton={false}
-                render={<Link href="/apps" />}
-              >
-                See all <ArrowRight data-icon="inline-end" />
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {discoverApps.slice(0, 6).map((app) => (
-                <DiscoverAppCard key={app.id} id={app.id} compact />
-              ))}
-            </div>
-          </section>
-        </div>
-
-        {/* Right rail */}
-        <aside className="flex min-w-0 flex-col gap-4">
-          {/* Subscription summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Subscription</CardTitle>
-              <CardDescription>{organization.plan} · monthly</CardDescription>
-              <CardAction>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  nativeButton={false}
-                  render={<Link href="/billing/subscriptions" />}
-                >
-                  Manage
-                </Button>
-              </CardAction>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <div>
-                <div className="mb-1.5 flex justify-between text-xs">
-                  <span className="text-muted-foreground">Seats used</span>
-                  <span className="font-medium tabular-nums">
-                    {usedSeats} / {totalSeats}
-                  </span>
-                </div>
-                <Progress value={(usedSeats / totalSeats) * 100} />
-              </div>
-              <div className="flex flex-col gap-2 rounded-lg border bg-muted/40 p-3 text-xs">
-                {subscribedApps.map((a) => (
-                  <div key={a.id} className="flex items-center gap-2">
-                    <AppIcon app={a} size="sm" />
-                    <span className="flex-1 font-medium">{a.name}</span>
-                    <span className="text-muted-foreground">{a.plan}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span className="text-xs text-muted-foreground">
-                  Next payment · Oct 15
-                </span>
-                <span className="text-lg font-semibold tabular-nums">
-                  GH₵ 1,450.00
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick actions</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-2">
-              {quickActions.map((q) => (
-                <Link
-                  key={q.label}
-                  href={q.href as never}
-                  className="flex flex-col gap-2 rounded-lg border p-3 text-xs font-medium transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground"
-                >
-                  <q.icon className="size-4 text-primary" />
-                  {q.label}
-                </Link>
-              ))}
-            </CardContent>
-          </Card>
-
           {/* Recent activity */}
           <Card>
-            <CardHeader>
+            <CardHeader className="border-b">
               <CardTitle>Recent activity</CardTitle>
               <CardDescription>Across all your apps</CardDescription>
               <CardAction>
@@ -378,13 +278,9 @@ export default function HomePage() {
                       <div className="min-w-0 flex-1 text-xs">
                         <p className="leading-relaxed">
                           <span className="font-medium">{item.actor}</span>{" "}
-                          <span className="text-muted-foreground">
-                            {item.action}
-                          </span>
+                          <span className="text-muted-foreground">{item.action}</span>
                         </p>
-                        <p className="mt-0.5 text-muted-foreground/80">
-                          {item.time}
-                        </p>
+                        <p className="mt-0.5 text-muted-foreground/80">{item.time}</p>
                       </div>
                     </li>
                   )
@@ -392,6 +288,70 @@ export default function HomePage() {
               </ol>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Right rail — subscription + quick actions */}
+        <aside className="flex min-w-0 flex-col gap-4">
+
+          {/* Subscription summary */}
+          <Card>
+            <CardHeader className="border-b">
+              <CardTitle>Subscription</CardTitle>
+              <CardDescription>{organization.plan} · monthly</CardDescription>
+              <CardAction>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  nativeButton={false}
+                  render={<Link href="/billing/subscriptions" />}
+                >
+                  Manage
+                </Button>
+              </CardAction>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <div>
+                <div className="mb-1.5 flex justify-between text-xs">
+                  <span className="text-muted-foreground">Seats used</span>
+                  <span className="font-medium tabular-nums">{usedSeats} / {totalSeats}</span>
+                </div>
+                <Progress value={(usedSeats / totalSeats) * 100} />
+              </div>
+              <div className="flex flex-col gap-2 rounded-lg border bg-muted/40 p-3 text-xs">
+                {subscribedApps.map((a) => (
+                  <div key={a.id} className="flex items-center gap-2">
+                    <AppIcon app={a} size="sm" />
+                    <span className="flex-1 font-medium">{a.name}</span>
+                    <span className="text-muted-foreground">{a.plan}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-baseline justify-between">
+                <span className="text-xs text-muted-foreground">Next payment · Oct 15</span>
+                <span className="text-lg font-semibold tabular-nums">{formatCurrency(1450)}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick actions */}
+          <Card>
+            <CardHeader className="border-b">
+              <CardTitle>Quick actions</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-2">
+              {quickActions.map((q) => (
+                <Link
+                  key={q.label}
+                  href={q.href as never}
+                  className="flex flex-col gap-2 rounded-lg border p-3 text-xs font-medium transition-colors hover:border-primary/40 hover:bg-accent hover:text-accent-foreground"
+                >
+                  <q.icon className="size-4 text-primary" />
+                  {q.label}
+                </Link>
+              ))}
+            </CardContent>
+          </Card>
+
         </aside>
       </div>
     </div>
